@@ -18,4 +18,9 @@ Auth::routes();
 
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
+//USUARIOS
 Route::resource('usuarios', 'UserController');
+
+//ESTABLECIMIENTOS
+Route::resource('establecimientos', 'EstablecimientoController');
+Route::get('est-tabla', 'EstablecimientoController@tabla')->name('est-tabla');
