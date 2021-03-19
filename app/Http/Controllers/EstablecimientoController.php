@@ -22,7 +22,7 @@ class EstablecimientoController extends Controller
     public function tabla()
     {
            
-        return  Establecimiento::get();
+        return  Establecimiento::where('activo', 1)->get();
         
     }
     
@@ -39,6 +39,8 @@ class EstablecimientoController extends Controller
         $establecimiento->nombre = request('nombre');
         $establecimiento->descripcion = request('descripcion');
         $establecimiento->ubicacion = request('ubicacion');
+        $establecimiento->id_usuario= 1;
+        $establecimiento->activo= 1;
         $establecimiento->save();
 
     }
@@ -56,6 +58,7 @@ class EstablecimientoController extends Controller
 
     public function destroy(Establecimiento $establecimiento)
     {
-        $establecimiento->delete();
+        $establecimiento->activo = 0;
+        $establecimiento->update();
     }
 }

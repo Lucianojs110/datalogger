@@ -88,4 +88,8 @@ class User extends Authenticatable
     }
     return false;
     }
+
+    public function establecimiento(){
+        return $this->belongsToMany (Establecimiento::class)->withTimestamps();
+    }
 }
