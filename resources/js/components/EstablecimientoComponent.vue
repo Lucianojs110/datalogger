@@ -1,9 +1,4 @@
 
-
-
-
-
-
 <template>
   <div>
     <h1 class="text-center">Gestionar Establecimientos</h1>
@@ -55,10 +50,8 @@
         </div>
       </div>
     </div>
-
-  
     <table class="table table-striped">
-      <thead class="thead-dark">
+      <thead>
         <tr>
           <th scope="col">#</th>
           <th scope="col">Nombre</th>
@@ -73,9 +66,8 @@
           <td>{{ esta.nombre }}</td>
           <td>{{ esta.descripcion }}</td>
           <td>{{ esta.ubicacion }}</td>
-        
           <td>
-               <button  @click="modificar=true; abrirModal(esta);" class="btn btn-warning">Editar</button>
+               <button  @click="modificar=true; abrirModal(esta);" class="btn btn-secondary">Editar</button>
             <button @click="eliminar(esta.id)" class="btn btn-danger">
               Eliminar
             </button>
@@ -96,16 +88,15 @@ export default {
         nombre:'',
         descripcion:'',
         ubicacion:'',
-      },
-      id:0,
-      modificar:true,
-      modal:0,
-      tituloModal:'',
-      est:[],
+        },
+        id:0,
+        modificar:true,
+        modal:0,
+        tituloModal:'',
+        est:[],
     };
   },
   methods: {
-
     async listar() {
       const res = await axios.get('/est-tabla');
       this.est = res.data;

@@ -2002,7 +2002,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             switch (_context2.prev = _context2.next) {
               case 0:
                 _context2.next = 2;
-                return axios["delete"]('/establecimientos/' + id);
+                return axios.put('/establecimientos/' + id);
 
               case 2:
                 res = _context2.sent;
@@ -39020,7 +39020,7 @@ var render = function() {
               _c(
                 "button",
                 {
-                  staticClass: "btn btn-warning",
+                  staticClass: "btn btn-secondary",
                   on: {
                     click: function($event) {
                       _vm.modificar = true
@@ -39056,7 +39056,7 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("thead", { staticClass: "thead-dark" }, [
+    return _c("thead", { staticClass: "thead-secondary" }, [
       _c("tr", [
         _c("th", { attrs: { scope: "col" } }, [_vm._v("#")]),
         _vm._v(" "),
