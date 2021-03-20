@@ -19,4 +19,10 @@ class Establecimiento extends Model
         'ubicacion',
         'activo',
     ];
+
+
+    public function usuarios(){
+        return $this->belongsToMany (User::class)->withTimestamps();
+       /*  return $this->belongsToMany('App\User', 'establecimiento-user', 'id', 'user_id')->withpivot('descripcion'); */
+    }
 }
