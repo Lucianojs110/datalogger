@@ -231,11 +231,17 @@ return [
         ],
        
        
-        ['header' => 'Cuentas'],
+        ['header' => 'Administración'],
         [
             'text' => 'Usuarios',
             'url'  => 'usuarios',
             'icon' => 'fas fa-fw fa-user',
+            'can'  => 'administrador',
+        ],
+        [
+            'text' => 'Establecimientos',
+            'url'  => 'establecimientos',
+            'icon' => 'fas fa-industry',
             'can'  => 'administrador',
         ],
        

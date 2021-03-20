@@ -61,11 +61,11 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="esta in est" :key="esta.id">
-          <th scope="row">{{ esta.id }}</th>
-          <td>{{ esta.nombre }}</td>
-          <td>{{ esta.descripcion }}</td>
-          <td>{{ esta.ubicacion }}</td>
+        <tr v-for="users in user" :key="users.id">
+          <th scope="row">{{ users.id }}</th>
+          <td>{{ users.name }}</td>
+          <td>{{ users.email }}</td>
+          <td>{{ users.rol }}</td>
           <td>
                <button  @click="modificar=true; abrirModal(esta);" class="btn btn-secondary">Editar</button>
             <button @click="eliminar(esta.id)" class="btn btn-danger">
@@ -155,6 +155,6 @@ export default {
   .mostrar{
     display: list-item;
     opacity: 1;
-    background: rgba(75, 56, 143, 0.705);
+    background: rgba(131, 145, 146, 0.705);
   }
 </style>
