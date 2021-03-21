@@ -2188,20 +2188,42 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
-      establecimiento: {
-        nombre: '',
-        descripcion: '',
-        ubicacion: ''
+      usuarios: {
+        name: '',
+        email: '',
+        password: '',
+        rol: ''
       },
       id: 0,
       modificar: true,
       modal: 0,
       tituloModal: '',
-      est: []
+      user: []
     };
   },
   methods: {
@@ -2215,11 +2237,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             switch (_context.prev = _context.next) {
               case 0:
                 _context.next = 2;
-                return axios.get('/est-tabla');
+                return axios.get('/user-tabla');
 
               case 2:
                 res = _context.sent;
-                _this.est = res.data;
+                _this.user = res.data;
 
               case 4:
               case "end":
@@ -2239,11 +2261,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             switch (_context2.prev = _context2.next) {
               case 0:
                 _context2.next = 2;
-                return axios.put('/establecimientos/' + id);
+                return axios.put('/usuarios/' + id);
 
               case 2:
                 res = _context2.sent;
-                sweetalert__WEBPACK_IMPORTED_MODULE_1___default()("Exito!", "El establecimiento se ha eliminado!", "success");
+                sweetalert__WEBPACK_IMPORTED_MODULE_1___default()("Exito!", "El Usuario se ha eliminado!", "success");
 
                 _this2.listar();
 
@@ -2259,8 +2281,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       var _this3 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee3() {
-        var res, _res;
-
+        var res;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee3$(_context3) {
           while (1) {
             switch (_context3.prev = _context3.next) {
@@ -2271,28 +2292,31 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 }
 
                 _context3.next = 3;
-                return axios.put('/establecimientos/' + _this3.id, _this3.establecimiento);
+                return axios.put('/usuarios/' + _this3.id, _this3.usuarios);
 
               case 3:
                 res = _context3.sent;
-                sweetalert__WEBPACK_IMPORTED_MODULE_1___default()("Exito!", "El establecimiento se ha editado!", "success");
-                _context3.next = 11;
+                sweetalert__WEBPACK_IMPORTED_MODULE_1___default()("Exito!", "El Usuario se ha editado!", "success");
+                _context3.next = 9;
                 break;
 
               case 7:
                 _context3.next = 9;
-                return axios.post('/establecimientos', _this3.establecimiento);
+                return axios.post('/usuarios', _this3.usuarios).then(function (res) {
+                  _this3.cerrarModal();
+
+                  _this3.listar();
+
+                  sweetalert__WEBPACK_IMPORTED_MODULE_1___default()("Exito!", "El Usuario se ha creado!", "success");
+                })["catch"](function (error) {
+                  var array = Object.values(error.response.data.errors);
+                  array.forEach(function (element) {
+                    return sweetalert__WEBPACK_IMPORTED_MODULE_1___default()(String(element));
+                  });
+                  console.log(array);
+                });
 
               case 9:
-                _res = _context3.sent;
-                sweetalert__WEBPACK_IMPORTED_MODULE_1___default()("Exito!", "El establecimiento se ha creado!", "success");
-
-              case 11:
-                _this3.cerrarModal();
-
-                _this3.listar();
-
-              case 13:
               case "end":
                 return _context3.stop();
             }
@@ -2306,16 +2330,18 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
       if (this.modificar) {
         this.id = data.id;
-        this.tituloModal = "Modificar Establecimiento";
-        this.establecimiento.nombre = data.nombre;
-        this.establecimiento.descripcion = data.descripcion;
-        this.establecimiento.ubicacion = data.ubicacion;
+        this.tituloModal = "Modificar Usuario";
+        this.usuarios.name = data.name;
+        this.usuarios.email = data.email;
+        this.usuarios.password = data.password;
+        this.usuarios.rol = data.roles[0].id;
       } else {
         this.id = 0;
-        this.tituloModal = "Crear Establecimiento";
-        this.establecimiento.nombre = '';
-        this.establecimiento.descripcion = '';
-        this.establecimiento.ubicacion = '';
+        this.tituloModal = "Crear Usuario";
+        this.usuarios.name = '';
+        this.usuarios.email = '';
+        this.usuarios.password = '';
+        this.usuarios.rol = '';
       }
     },
     cerrarModal: function cerrarModal() {
@@ -39490,9 +39516,7 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", [
-    _c("h1", { staticClass: "text-center" }, [
-      _vm._v("Gestionar Establecimientos")
-    ]),
+    _c("h1", { staticClass: "text-center" }, [_vm._v("Gestionar Usuarios")]),
     _vm._v(" "),
     _c("hr"),
     _vm._v(" "),
@@ -39536,101 +39560,239 @@ var render = function() {
           _vm._v(" "),
           _c("div", { staticClass: "modal-body" }, [
             _c("div", { staticClass: "my-4" }, [
-              _c("label", { attrs: { for: "nombre" } }, [_vm._v("Nombre")]),
+              _c("label", [_vm._v("Nombre")]),
               _vm._v(" "),
               _c("input", {
                 directives: [
                   {
                     name: "model",
                     rawName: "v-model",
-                    value: _vm.establecimiento.nombre,
-                    expression: "establecimiento.nombre"
+                    value: _vm.usuarios.name,
+                    expression: "usuarios.name"
                   }
                 ],
                 staticClass: "form-control",
-                attrs: { type: "text", id: "nombre", placeholder: "Nombre " },
-                domProps: { value: _vm.establecimiento.nombre },
+                attrs: {
+                  type: "text",
+                  id: "name",
+                  placeholder: "Nombre del usuario"
+                },
+                domProps: { value: _vm.usuarios.name },
                 on: {
                   input: function($event) {
                     if ($event.target.composing) {
                       return
                     }
-                    _vm.$set(_vm.establecimiento, "nombre", $event.target.value)
+                    _vm.$set(_vm.usuarios, "name", $event.target.value)
                   }
                 }
               })
             ]),
             _vm._v(" "),
             _c("div", { staticClass: "my-4" }, [
-              _c("label", { attrs: { for: "descripcion" } }, [
-                _vm._v("descripcion")
-              ]),
+              _c("label", [_vm._v("Email")]),
               _vm._v(" "),
               _c("input", {
                 directives: [
                   {
                     name: "model",
                     rawName: "v-model",
-                    value: _vm.establecimiento.descripcion,
-                    expression: "establecimiento.descripcion"
+                    value: _vm.usuarios.email,
+                    expression: "usuarios.email"
                   }
                 ],
                 staticClass: "form-control",
                 attrs: {
                   type: "text",
-                  id: "descripcion",
-                  placeholder: "Descripcion"
+                  id: "email",
+                  placeholder: "Ingrese una direccion de email"
                 },
-                domProps: { value: _vm.establecimiento.descripcion },
+                domProps: { value: _vm.usuarios.email },
                 on: {
                   input: function($event) {
                     if ($event.target.composing) {
                       return
                     }
-                    _vm.$set(
-                      _vm.establecimiento,
-                      "descripcion",
-                      $event.target.value
-                    )
+                    _vm.$set(_vm.usuarios, "email", $event.target.value)
                   }
                 }
               })
             ]),
             _vm._v(" "),
             _c("div", { staticClass: "my-4" }, [
-              _c("label", { attrs: { for: "ubicacion" } }, [
-                _vm._v("Ubicación")
-              ]),
+              _c("label", [_vm._v("Password")]),
               _vm._v(" "),
               _c("input", {
                 directives: [
                   {
                     name: "model",
                     rawName: "v-model",
-                    value: _vm.establecimiento.ubicacion,
-                    expression: "establecimiento.ubicacion"
+                    value: _vm.usuarios.password,
+                    expression: "usuarios.password"
                   }
                 ],
                 staticClass: "form-control",
                 attrs: {
-                  type: "text",
-                  id: "ubicacion",
-                  placeholder: "Ubicacion"
+                  type: "password",
+                  id: "password",
+                  placeholder: "Ingrese una contraseña"
                 },
-                domProps: { value: _vm.establecimiento.ubicacion },
+                domProps: { value: _vm.usuarios.password },
                 on: {
                   input: function($event) {
                     if ($event.target.composing) {
                       return
                     }
-                    _vm.$set(
-                      _vm.establecimiento,
-                      "ubicacion",
-                      $event.target.value
-                    )
+                    _vm.$set(_vm.usuarios, "password", $event.target.value)
                   }
                 }
               })
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "my-4" }, [
+              _c("label", [_vm._v("Rol")]),
+              _vm._v(" "),
+              _vm.usuarios.rol == "1"
+                ? _c("div", [
+                    _c(
+                      "select",
+                      {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.usuarios.rol,
+                            expression: "usuarios.rol"
+                          }
+                        ],
+                        staticClass: "form-control",
+                        attrs: { id: "rol" },
+                        on: {
+                          change: function($event) {
+                            var $$selectedVal = Array.prototype.filter
+                              .call($event.target.options, function(o) {
+                                return o.selected
+                              })
+                              .map(function(o) {
+                                var val = "_value" in o ? o._value : o.value
+                                return val
+                              })
+                            _vm.$set(
+                              _vm.usuarios,
+                              "rol",
+                              $event.target.multiple
+                                ? $$selectedVal
+                                : $$selectedVal[0]
+                            )
+                          }
+                        }
+                      },
+                      [
+                        _c("option", { attrs: { value: "1", selected: "" } }, [
+                          _vm._v("Administrador")
+                        ]),
+                        _vm._v(" "),
+                        _c("option", { attrs: { value: "2" } }, [
+                          _vm._v("Usuario")
+                        ])
+                      ]
+                    )
+                  ])
+                : _vm.usuarios.rol == "2"
+                ? _c("div", [
+                    _c(
+                      "select",
+                      {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.usuarios.rol,
+                            expression: "usuarios.rol"
+                          }
+                        ],
+                        staticClass: "form-control",
+                        attrs: { id: "rol" },
+                        on: {
+                          change: function($event) {
+                            var $$selectedVal = Array.prototype.filter
+                              .call($event.target.options, function(o) {
+                                return o.selected
+                              })
+                              .map(function(o) {
+                                var val = "_value" in o ? o._value : o.value
+                                return val
+                              })
+                            _vm.$set(
+                              _vm.usuarios,
+                              "rol",
+                              $event.target.multiple
+                                ? $$selectedVal
+                                : $$selectedVal[0]
+                            )
+                          }
+                        }
+                      },
+                      [
+                        _c("option", { attrs: { value: "1" } }, [
+                          _vm._v("Administrador")
+                        ]),
+                        _vm._v(" "),
+                        _c("option", { attrs: { value: "2", selected: "" } }, [
+                          _vm._v("Usuario")
+                        ])
+                      ]
+                    )
+                  ])
+                : _c("div", [
+                    _c(
+                      "select",
+                      {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.usuarios.rol,
+                            expression: "usuarios.rol "
+                          }
+                        ],
+                        staticClass: "form-control",
+                        attrs: { id: "rol" },
+                        on: {
+                          change: function($event) {
+                            var $$selectedVal = Array.prototype.filter
+                              .call($event.target.options, function(o) {
+                                return o.selected
+                              })
+                              .map(function(o) {
+                                var val = "_value" in o ? o._value : o.value
+                                return val
+                              })
+                            _vm.$set(
+                              _vm.usuarios,
+                              "rol",
+                              $event.target.multiple
+                                ? $$selectedVal
+                                : $$selectedVal[0]
+                            )
+                          }
+                        }
+                      },
+                      [
+                        _c("option", { attrs: { disabled: "", value: "" } }, [
+                          _vm._v("Elige un rol para el usuario..")
+                        ]),
+                        _vm._v(" "),
+                        _c("option", { attrs: { value: "1" } }, [
+                          _vm._v("Administrador")
+                        ]),
+                        _vm._v(" "),
+                        _c("option", { attrs: { value: "2" } }, [
+                          _vm._v("Usuario")
+                        ])
+                      ]
+                    )
+                  ])
             ])
           ]),
           _vm._v(" "),
@@ -39680,7 +39842,7 @@ var render = function() {
             _vm._v(" "),
             _c("td", [_vm._v(_vm._s(users.email))]),
             _vm._v(" "),
-            _c("td", [_vm._v(_vm._s(users.rol))]),
+            _c("td", [_vm._v(_vm._s(users.roles[0].name))]),
             _vm._v(" "),
             _c("td", [
               _c(
@@ -39690,7 +39852,7 @@ var render = function() {
                   on: {
                     click: function($event) {
                       _vm.modificar = true
-                      _vm.abrirModal(_vm.esta)
+                      _vm.abrirModal(users)
                     }
                   }
                 },
@@ -39703,7 +39865,7 @@ var render = function() {
                   staticClass: "btn btn-danger",
                   on: {
                     click: function($event) {
-                      return _vm.eliminar(_vm.esta.id)
+                      return _vm.eliminar(users.id)
                     }
                   }
                 },
@@ -39728,9 +39890,9 @@ var staticRenderFns = [
         _vm._v(" "),
         _c("th", { attrs: { scope: "col" } }, [_vm._v("Nombre")]),
         _vm._v(" "),
-        _c("th", { attrs: { scope: "col" } }, [_vm._v("Descripcion")]),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Email")]),
         _vm._v(" "),
-        _c("th", { attrs: { scope: "col" } }, [_vm._v("Ubicación")]),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Rol")]),
         _vm._v(" "),
         _c(
           "th",

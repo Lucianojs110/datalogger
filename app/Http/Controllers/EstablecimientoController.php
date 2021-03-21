@@ -22,7 +22,7 @@ class EstablecimientoController extends Controller
     public function tabla()
     {
            
-        return  Establecimiento::where('activo', 1)->get();
+        return  Establecimiento::get();
         
     }
     

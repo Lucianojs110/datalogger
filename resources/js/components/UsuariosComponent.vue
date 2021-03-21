@@ -1,10 +1,8 @@
 
 <template>
   <div>
-    <h1 class="text-center">Gestionar Establecimientos</h1>
+    <h1 class="text-center">Gestionar Usuarios</h1>
     <hr>
-
-
      <!-- Button to Open the Modal -->
     <button @click="modificar=false; abrirModal();" type="button" class="btn btn-primary my-4">Nuevo</button>
 
@@ -23,17 +21,40 @@
           <!-- Modal body -->
           <div class="modal-body">
             <div class="my-4">
-              <label for="nombre">Nombre</label>
-              <input v-model="establecimiento.nombre" type="text" class="form-control" id="nombre" placeholder="Nombre ">
+              <label>Nombre</label>
+              <input  v-model="usuarios.name" type="text" class="form-control" id="name" placeholder="Nombre del usuario">
             </div>
             <div class="my-4">
-              <label for="descripcion">descripcion</label>
-              <input v-model="establecimiento.descripcion" type="text" class="form-control" id="descripcion" placeholder="Descripcion">
+              <label>Email</label>
+              <input v-model="usuarios.email" type="text" class="form-control" id="email" placeholder="Ingrese una direccion de email">
+            </div>
+             <div class="my-4">
+              <label>Password</label>
+              <input v-model="usuarios.password" type="password" class="form-control" id="password" placeholder="Ingrese una contraseña">
             </div>
             <div class="my-4">
-              <label for="ubicacion">Ubicación</label>
-              <input v-model="establecimiento.ubicacion" type="text" class="form-control" id="ubicacion" placeholder="Ubicacion">
+              <label>Rol</label>
+                 <div v-if="usuarios.rol == '1'">
+                    <select id="rol" v-model="usuarios.rol" class="form-control">
+                         <option  value='1' selected>Administrador</option> 
+                         <option  value='2'>Usuario</option> 
+                    </select>
+                </div>
+                <div v-else-if="usuarios.rol == '2'">
+                    <select id="rol" v-model="usuarios.rol" class="form-control">
+                        <option  value='1'>Administrador</option> 
+                        <option  value='2' selected>Usuario</option> 
+                    </select>
+                </div>
+                <div v-else>
+                    <select id="rol" v-model="usuarios.rol " class="form-control">
+                        <option disabled value="">Elige un rol para el usuario..</option>
+                        <option value=1>Administrador</option> 
+                        <option value=2>Usuario</option> 
+                    </select>
+                </div>              
             </div>
+         
           </div>
 
           <!-- Modal footer -->
@@ -55,8 +76,8 @@
         <tr>
           <th scope="col">#</th>
           <th scope="col">Nombre</th>
-          <th scope="col">Descripcion</th>
-          <th scope="col">Ubicación</th>
+          <th scope="col">Email</th>
+          <th scope="col">Rol</th>
           <th scope="col" colspan="2" class="text-center">Accion</th>
         </tr>
       </thead>
@@ -65,10 +86,10 @@
           <th scope="row">{{ users.id }}</th>
           <td>{{ users.name }}</td>
           <td>{{ users.email }}</td>
-          <td>{{ users.rol }}</td>
+          <td>{{ users.roles[0].name }}</td>
           <td>
-               <button  @click="modificar=true; abrirModal(esta);" class="btn btn-secondary">Editar</button>
-            <button @click="eliminar(esta.id)" class="btn btn-danger">
+               <button  @click="modificar=true; abrirModal(users);" class="btn btn-secondary">Editar</button>
+            <button @click="eliminar(users.id)" class="btn btn-danger">
               Eliminar
             </button>
           </td>
@@ -79,61 +100,80 @@
 </template>
 
 <script>
+
  import swal from 'sweetalert';
-export default {
+ 
+ export default {
  
   data() {
     return {
-        establecimiento:{
-        nombre:'',
-        descripcion:'',
-        ubicacion:'',
+        usuarios:{
+        name:'',
+        email:'',
+        password:'',
+        rol:'',
         },
         id:0,
         modificar:true,
         modal:0,
         tituloModal:'',
-        est:[],
+        user:[],
+        
     };
   },
+
+   
   methods: {
     async listar() {
-      const res = await axios.get('/est-tabla');
-      this.est = res.data;
+      const res = await axios.get('/user-tabla');
+      this.user = res.data;
     },
 
     async eliminar(id) {
-      const res = await axios.put('/establecimientos/' + id);
-      swal("Exito!", "El establecimiento se ha eliminado!", "success");
+      const res = await axios.put('/usuarios/' + id);
+      swal("Exito!", "El Usuario se ha eliminado!", "success");
       this.listar();
     },
 
     async guardar() {
       if(this.modificar){
-        const res = await axios.put('/establecimientos/'+this.id, this.establecimiento);
-        swal("Exito!", "El establecimiento se ha editado!", "success");
+
+        const res = await axios.put('/usuarios/'+this.id, this.usuarios);
+        swal("Exito!", "El Usuario se ha editado!", "success");
+        
       }else{
-        const res = await axios.post('/establecimientos', this.establecimiento);
-        swal("Exito!", "El establecimiento se ha creado!", "success");
+        //const res = await axios.post('/usuarios', this.usuarios);
+
+         await axios.post('/usuarios', this.usuarios).then(res=>{ 
+                 this.cerrarModal();
+                 this.listar();
+                 swal("Exito!", "El Usuario se ha creado!", "success");}).catch(function (error){
+                     var array = Object.values(error.response.data.errors)
+                     array.forEach(element => swal(String(element)))
+                     console.log(array)
+                 });
+        
+        
       }
-      this.cerrarModal();
-      this.listar();
+     
     },
 
       abrirModal(data={}){
       this.modal=1;
       if(this.modificar){
         this.id=data.id;
-        this.tituloModal="Modificar Establecimiento";
-        this.establecimiento.nombre=data.nombre;
-        this.establecimiento.descripcion=data.descripcion;
-        this.establecimiento.ubicacion=data.ubicacion;
+        this.tituloModal="Modificar Usuario";
+        this.usuarios.name=data.name;
+        this.usuarios.email=data.email;
+        this.usuarios.password=data.password;
+        this.usuarios.rol=data.roles[0].id;
       }else{
         this.id=0;
-        this.tituloModal="Crear Establecimiento";
-        this.establecimiento.nombre='';
-        this.establecimiento.descripcion='';
-        this.establecimiento.ubicacion='';
+        this.tituloModal="Crear Usuario";
+        this.usuarios.name='';
+        this.usuarios.email='';
+        this.usuarios.password='';
+        this.usuarios.rol='';
       }
     },
   
@@ -141,9 +181,7 @@ export default {
       this.modal=0;
     },
    
-  },
-
-   
+  }, 
    created() {
     this.listar();
   },

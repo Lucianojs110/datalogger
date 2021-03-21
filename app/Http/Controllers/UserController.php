@@ -3,13 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
-
-
 use Illuminate\Support\Facades\DB;
 use App\Models\User;
+use App\Models\Role;
 use App\Http\Requests\UserFormRequest;
-use App\Http\Requests\UserEditFormRequest;
+use Session;
 
 class UserController extends Controller
 {
@@ -18,13 +16,27 @@ class UserController extends Controller
         $this->middleware('auth');
     }
 
-   
-    
-     public function index(Request $request)
+    public function index(Request $request)
     {
-        
-        return view('usuarios.index', ['users'=>$users = User::all()]);
+        $request->user()->authorizeRoles(['administrador']);
+        return view('usuarios.index');
+    }
 
-        
+    public function tabla()
+    {
+           
+        return  User::With('roles')->get();
+
+    }
+
+    public function store(UserFormRequest $request)
+    {
+        $usuario = new User();
+        $usuario->name = request('name');
+        $usuario->email = request('email');
+        $usuario->password = bcrypt(request('password'));
+        $usuario->save();
+        $usuario->asignarRol(request('rol'));
+       
     }
 }

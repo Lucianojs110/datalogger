@@ -20,6 +20,7 @@ Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('ho
 
 //USUARIOS
 Route::resource('usuarios', 'UserController');
+Route::get('user-tabla', 'UserController@tabla')->name('user-tabla');
 
 //ESTABLECIMIENTOS
 Route::resource('establecimientos', 'EstablecimientoController');
