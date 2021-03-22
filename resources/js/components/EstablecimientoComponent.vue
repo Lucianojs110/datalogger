@@ -1,12 +1,16 @@
 
 <template>
-  <div>
-    <h1 class="text-center">Gestionar Establecimientos</h1>
-    <hr>
 
+  
+  
+  <div class="card" style="background-color: #fff">
+        <div class="card-header bg-primary mb-3">
+            <h3 class="text-left">Gestionar Establecimientos <button @click="modificar=false; abrirModal();" type="button" class="btn btn-light float-right">Nuevo Establecimiento</button></h3>
+        </div>
+   <div class="container p-2 my-2">
 
-     <!-- Button to Open the Modal -->
-    <button @click="modificar=false; abrirModal();" type="button" class="btn btn-primary my-4">Nuevo</button>
+ 
+
 
     <!-- The Modal -->
     <div class="modal" :class="{mostrar: modal}">
@@ -50,14 +54,14 @@
         </div>
       </div>
     </div>
-    <table class="table table-striped">
+    <table class="table" id="table">
       <thead>
         <tr>
-          <th scope="col">#</th>
-          <th scope="col">Nombre</th>
-          <th scope="col">Descripcion</th>
-          <th scope="col">Ubicación</th>
-          <th scope="col" colspan="2" class="text-center">Accion</th>
+          <th>#</th>
+          <th>Nombre</th>
+          <th>Descripcion</th>
+          <th>Ubicación</th>
+          <th>Acción</th>
         </tr>
       </thead>
       <tbody>
@@ -67,21 +71,20 @@
           <td>{{ esta.descripcion }}</td>
           <td>{{ esta.ubicacion }}</td>
           <td>
-               <button  @click="modificar=true; abrirModal(esta);" class="btn btn-secondary">Editar</button>
-            <button @click="eliminar(esta.id)" class="btn btn-danger">
-              Eliminar
-            </button>
+            <button  @click="modificar=true; abrirModal(esta);" class="btn btn-secondary btn-sm">Editar</button>
+            <button @click="eliminar(esta.id)" class="btn btn-info btn-sm"> Configurar</button>
+            <button @click="eliminar(esta.id)" class="btn btn-danger btn-sm"> Eliminar</button>
           </td>
         </tr>
       </tbody>
     </table>
   </div>
+  </div>
 </template>
 
 <script>
- import swal from 'sweetalert';
+import swal from 'sweetalert';
 export default {
- 
   data() {
     return {
         establecimiento:{
@@ -97,9 +100,19 @@ export default {
     };
   },
   methods: {
+
+     tabla() {
+        this.$nextTick(()=>{ $('#table').DataTable(
+        {"language":{
+        "url": "//cdn.datatables.net/plug-ins/1.10.24/i18n/Spanish.json"
+        }});
+        });
+    },  
+
     async listar() {
       const res = await axios.get('/est-tabla');
       this.est = res.data;
+      this.tabla();
     },
 
     async eliminar(id) {

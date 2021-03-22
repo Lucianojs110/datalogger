@@ -1,10 +1,10 @@
 
 <template>
-  <div>
-    <h1 class="text-center">Gestionar Usuarios</h1>
-    <hr>
-     <!-- Button to Open the Modal -->
-    <button @click="modificar=false; abrirModal();" type="button" class="btn btn-primary my-4">Nuevo</button>
+   <div class="card" style="background-color: #fff">
+        <div class="card-header bg-primary mb-3">
+            <h3 class="text-left">Gestionar Usuarios<button @click="modificar=false; abrirModal();" type="button" class="btn btn-light float-right">Nuevo Usuario</button></h3>
+        </div>
+   <div class="container p-2 my-2">
 
     <!-- The Modal -->
     <div class="modal" :class="{mostrar: modal}">
@@ -65,20 +65,21 @@
             <button  @click="guardar();" type="button" class="btn btn-success" data-dismiss="modal">
               Guardar
             </button>
-
-
           </div>
         </div>
       </div>
     </div>
-    <table class="table table-striped">
+
+
+  
+    <table class="table" id="table">
       <thead>
         <tr>
-          <th scope="col">#</th>
-          <th scope="col">Nombre</th>
-          <th scope="col">Email</th>
-          <th scope="col">Rol</th>
-          <th scope="col" colspan="2" class="text-center">Accion</th>
+          <th>#</th>
+          <th>Nombre</th>
+          <th>Email</th>
+          <th>Rol</th>
+          <th>Accion</th>
         </tr>
       </thead>
       <tbody>
@@ -88,15 +89,15 @@
           <td>{{ users.email }}</td>
           <td>{{ users.roles[0].name }}</td>
           <td>
-               <button  @click="modificar=true; abrirModal(users);" class="btn btn-secondary">Editar</button>
-            <button @click="eliminar(users.id)" class="btn btn-danger">
-              Eliminar
-            </button>
+            <button  @click="modificar=true; abrirModal(users);" class="btn btn-secondary btn-sm">Editar</button>
+            <button @click="eliminar(users.id)" class="btn btn-danger btn-sm">Eliminar</button>
           </td>
         </tr>
       </tbody>
     </table>
-  </div>
+    </div>
+    </div>
+
 </template>
 
 <script>
@@ -122,11 +123,19 @@
     };
   },
 
-   
   methods: {
+    tabla() {
+        this.$nextTick(()=>{ $('#table').DataTable(
+        {"language":{
+        "url": "//cdn.datatables.net/plug-ins/1.10.24/i18n/Spanish.json"
+        }});
+        });
+    },  
+
     async listar() {
       const res = await axios.get('/user-tabla');
       this.user = res.data;
+      this.tabla();
     },
 
     async eliminar(id) {
@@ -142,8 +151,7 @@
         swal("Exito!", "El Usuario se ha editado!", "success");
         
       }else{
-        //const res = await axios.post('/usuarios', this.usuarios);
-
+       
          await axios.post('/usuarios', this.usuarios).then(res=>{ 
                  this.cerrarModal();
                  this.listar();
@@ -152,8 +160,6 @@
                      array.forEach(element => swal(String(element)))
                      console.log(array)
                  });
-        
-        
       }
      
     },
@@ -176,19 +182,16 @@
         this.usuarios.rol='';
       }
     },
-  
     cerrarModal(){
       this.modal=0;
     },
-   
   }, 
    created() {
     this.listar();
+    
   },
- 
 };
 </script>
-
 <style>
   .mostrar{
     display: list-item;
