@@ -17,7 +17,6 @@ class Establecimiento extends Model
         'nombre',
         'descripcion',
         'ubicacion',
-        'activo',
     ];
 
 

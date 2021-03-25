@@ -87,7 +87,10 @@
           <th scope="row">{{ users.id }}</th>
           <td>{{ users.name }}</td>
           <td>{{ users.email }}</td>
-          <td>{{ users.roles[0].name }}</td>
+          <td><div  v-if="users.roles!=''">{{ users.roles[0].name }}</div>
+          <div  v-else>No asignado</div>
+          </td>
+         
           <td>
             <button  @click="modificar=true; abrirModal(users);" class="btn btn-secondary btn-sm">Editar</button>
             <button @click="eliminar(users.id)" class="btn btn-danger btn-sm">Eliminar</button>
@@ -132,32 +135,53 @@
         });
     },  
 
-    async listar() {
-      const res = await axios.get('/user-tabla');
+   
+     listar() {
+      axios.get('/user-tabla').then(res=>{
       this.user = res.data;
+      $('#table').DataTable().destroy();
       this.tabla();
+       });
     },
 
-    async eliminar(id) {
-      const res = await axios.put('/usuarios/' + id);
-      swal("Exito!", "El Usuario se ha eliminado!", "success");
-      this.listar();
+    
+
+      eliminar(id) {
+      swal({
+        title: 'Esta seguro?',
+        text: 'Este Usuario sera eliminado definitavemente!',
+        icon: 'warning',
+        buttons: ["Cancelar", "Si!"],
+        }).then((willDelete)=> {
+        if (willDelete) {
+                 axios.delete('/usuarios/' + id).then(res=>{
+                  this.listar() 
+                  swal("Exito!", "El Usuario se ha eliminado!", "success");
+                 }).catch(function (error){
+                     var array = Object.values(error.response.data.errors)
+                     array.forEach(swal(String(array)))    
+                 });        
+        } 
+    });
     },
 
     async guardar() {
       if(this.modificar){
-
-        const res = await axios.put('/usuarios/'+this.id, this.usuarios);
-        swal("Exito!", "El Usuario se ha editado!", "success");
-        
+        await axios.put('/usuarios/'+this.id, this.usuarios).then(res=>{ 
+                 this.cerrarModal();
+                 this.listar();
+                 swal("Exito!", "El Usuario se ha editado!", "success");}).catch(function (error){
+                     var array = Object.values(error.response.data.errors)
+                     array.forEach(swal(String(array)))
+                     console.log(array)
+                 });
       }else{
-       
          await axios.post('/usuarios', this.usuarios).then(res=>{ 
                  this.cerrarModal();
                  this.listar();
                  swal("Exito!", "El Usuario se ha creado!", "success");}).catch(function (error){
                      var array = Object.values(error.response.data.errors)
-                     array.forEach(element => swal(String(element)))
+                     array.forEach(swal(String(array)))
                      console.log(array)
                  });
       }

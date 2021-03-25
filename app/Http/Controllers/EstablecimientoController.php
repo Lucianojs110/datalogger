@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Establecimiento;
+use App\Http\Requests\EstablecimientoFormRequest;
 
 class EstablecimientoController extends Controller
 {
@@ -32,33 +33,28 @@ class EstablecimientoController extends Controller
         return $establecimiento;    
     }
 
-    public function store(Request $request)
+    public function store(EstablecimientoFormRequest $request)
     {
         
         $establecimiento = new Establecimiento();
         $establecimiento->nombre = request('nombre');
         $establecimiento->descripcion = request('descripcion');
         $establecimiento->ubicacion = request('ubicacion');
-        $establecimiento->id_usuario= 1;
-        $establecimiento->activo= 1;
         $establecimiento->save();
 
     }
-    public function update(Request $request, Establecimiento $establecimiento)
+    public function update(EstablecimientoFormRequest $request, Establecimiento $establecimiento)
     {
         
         $establecimiento->update($request->all());
 
     }
 
-    //public function destroy(Establecimiento $establecimiento)
-    //{
-    //    $establecimiento->delete();
-   // }
+   
 
     public function destroy(Establecimiento $establecimiento)
     {
-        $establecimiento->activo = 0;
-        $establecimiento->update();
+       
+        $establecimiento->delete();
     }
 }

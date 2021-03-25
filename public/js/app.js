@@ -1856,18 +1856,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
-/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var sweetalert__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! sweetalert */ "./node_modules/sweetalert/dist/sweetalert.min.js");
-/* harmony import */ var sweetalert__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(sweetalert__WEBPACK_IMPORTED_MODULE_1__);
-
-
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
-
-function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
-
-//
-//
+/* harmony import */ var sweetalert__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! sweetalert */ "./node_modules/sweetalert/dist/sweetalert.min.js");
+/* harmony import */ var sweetalert__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(sweetalert__WEBPACK_IMPORTED_MODULE_0__);
 //
 //
 //
@@ -1979,99 +1969,60 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     listar: function listar() {
       var _this = this;
 
-      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee() {
-        var res;
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee$(_context) {
-          while (1) {
-            switch (_context.prev = _context.next) {
-              case 0:
-                _context.next = 2;
-                return axios.get('/est-tabla');
+      axios.get('/est-tabla').then(function (res) {
+        _this.est = res.data;
+        $('#table').DataTable().destroy();
 
-              case 2:
-                res = _context.sent;
-                _this.est = res.data;
-
-                _this.tabla();
-
-              case 5:
-              case "end":
-                return _context.stop();
-            }
-          }
-        }, _callee);
-      }))();
+        _this.tabla();
+      });
     },
     eliminar: function eliminar(id) {
       var _this2 = this;
 
-      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee2() {
-        var res;
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee2$(_context2) {
-          while (1) {
-            switch (_context2.prev = _context2.next) {
-              case 0:
-                _context2.next = 2;
-                return axios.put('/establecimientos/' + id);
+      sweetalert__WEBPACK_IMPORTED_MODULE_0___default()({
+        title: 'Esta seguro?',
+        text: 'Este archivo sera eliminado definitavemente!',
+        icon: 'warning',
+        buttons: ["Cancelar", "Si!"]
+      }).then(function (willDelete) {
+        if (willDelete) {
+          axios["delete"]('/establecimientos/' + id).then(function (res) {
+            _this2.listar();
 
-              case 2:
-                res = _context2.sent;
-                sweetalert__WEBPACK_IMPORTED_MODULE_1___default()("Exito!", "El establecimiento se ha eliminado!", "success");
-
-                _this2.listar();
-
-              case 5:
-              case "end":
-                return _context2.stop();
-            }
-          }
-        }, _callee2);
-      }))();
+            sweetalert__WEBPACK_IMPORTED_MODULE_0___default()("Exito!", "El establecimiento se ha eliminado!", "success");
+          })["catch"](function (error) {
+            var array = Object.values(error.response.data.errors);
+            array.forEach(sweetalert__WEBPACK_IMPORTED_MODULE_0___default()(String(array)));
+          });
+        }
+      });
     },
     guardar: function guardar() {
       var _this3 = this;
 
-      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee3() {
-        var res, _res;
+      if (this.modificar) {
+        axios.put('/establecimientos/' + this.id, this.establecimiento).then(function (res) {
+          _this3.cerrarModal();
 
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee3$(_context3) {
-          while (1) {
-            switch (_context3.prev = _context3.next) {
-              case 0:
-                if (!_this3.modificar) {
-                  _context3.next = 7;
-                  break;
-                }
+          _this3.listar();
 
-                _context3.next = 3;
-                return axios.put('/establecimientos/' + _this3.id, _this3.establecimiento);
+          sweetalert__WEBPACK_IMPORTED_MODULE_0___default()("Exito!", "El establecimiento se ha editado!", "success");
+        })["catch"](function (error) {
+          var array = Object.values(error.response.data.errors + '<br>');
+          array.forEach(sweetalert__WEBPACK_IMPORTED_MODULE_0___default()(String(array)));
+        });
+      } else {
+        axios.post('/establecimientos', this.establecimiento).then(function (res) {
+          _this3.cerrarModal();
 
-              case 3:
-                res = _context3.sent;
-                sweetalert__WEBPACK_IMPORTED_MODULE_1___default()("Exito!", "El establecimiento se ha editado!", "success");
-                _context3.next = 11;
-                break;
+          _this3.listar();
 
-              case 7:
-                _context3.next = 9;
-                return axios.post('/establecimientos', _this3.establecimiento);
-
-              case 9:
-                _res = _context3.sent;
-                sweetalert__WEBPACK_IMPORTED_MODULE_1___default()("Exito!", "El establecimiento se ha creado!", "success");
-
-              case 11:
-                _this3.cerrarModal();
-
-                _this3.listar();
-
-              case 13:
-              case "end":
-                return _context3.stop();
-            }
-          }
-        }, _callee3);
-      }))();
+          sweetalert__WEBPACK_IMPORTED_MODULE_0___default()("Exito!", "El establecimiento se ha creado!", "success");
+        })["catch"](function (error) {
+          var array = Object.values(error.response.data.errors);
+          array.forEach(sweetalert__WEBPACK_IMPORTED_MODULE_0___default()(String(array)));
+        });
+      }
     },
     abrirModal: function abrirModal() {
       var data = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
@@ -2225,6 +2176,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
@@ -2255,80 +2209,66 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     listar: function listar() {
       var _this = this;
 
-      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee() {
-        var res;
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee$(_context) {
-          while (1) {
-            switch (_context.prev = _context.next) {
-              case 0:
-                _context.next = 2;
-                return axios.get('/user-tabla');
+      axios.get('/user-tabla').then(function (res) {
+        _this.user = res.data;
+        $('#table').DataTable().destroy();
 
-              case 2:
-                res = _context.sent;
-                _this.user = res.data;
-
-                _this.tabla();
-
-              case 5:
-              case "end":
-                return _context.stop();
-            }
-          }
-        }, _callee);
-      }))();
+        _this.tabla();
+      });
     },
     eliminar: function eliminar(id) {
       var _this2 = this;
 
-      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee2() {
-        var res;
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee2$(_context2) {
-          while (1) {
-            switch (_context2.prev = _context2.next) {
-              case 0:
-                _context2.next = 2;
-                return axios.put('/usuarios/' + id);
+      sweetalert__WEBPACK_IMPORTED_MODULE_1___default()({
+        title: 'Esta seguro?',
+        text: 'Este Usuario sera eliminado definitavemente!',
+        icon: 'warning',
+        buttons: ["Cancelar", "Si!"]
+      }).then(function (willDelete) {
+        if (willDelete) {
+          axios["delete"]('/usuarios/' + id).then(function (res) {
+            _this2.listar();
 
-              case 2:
-                res = _context2.sent;
-                sweetalert__WEBPACK_IMPORTED_MODULE_1___default()("Exito!", "El Usuario se ha eliminado!", "success");
-
-                _this2.listar();
-
-              case 5:
-              case "end":
-                return _context2.stop();
-            }
-          }
-        }, _callee2);
-      }))();
+            sweetalert__WEBPACK_IMPORTED_MODULE_1___default()("Exito!", "El Usuario se ha eliminado!", "success");
+          })["catch"](function (error) {
+            var array = Object.values(error.response.data.errors);
+            array.forEach(sweetalert__WEBPACK_IMPORTED_MODULE_1___default()(String(array)));
+          });
+        }
+      });
     },
     guardar: function guardar() {
       var _this3 = this;
 
-      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee3() {
-        var res;
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee3$(_context3) {
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee$(_context) {
           while (1) {
-            switch (_context3.prev = _context3.next) {
+            switch (_context.prev = _context.next) {
               case 0:
                 if (!_this3.modificar) {
-                  _context3.next = 7;
+                  _context.next = 5;
                   break;
                 }
 
-                _context3.next = 3;
-                return axios.put('/usuarios/' + _this3.id, _this3.usuarios);
+                _context.next = 3;
+                return axios.put('/usuarios/' + _this3.id, _this3.usuarios).then(function (res) {
+                  _this3.cerrarModal();
+
+                  _this3.listar();
+
+                  sweetalert__WEBPACK_IMPORTED_MODULE_1___default()("Exito!", "El Usuario se ha editado!", "success");
+                })["catch"](function (error) {
+                  var array = Object.values(error.response.data.errors);
+                  array.forEach(sweetalert__WEBPACK_IMPORTED_MODULE_1___default()(String(array)));
+                  console.log(array);
+                });
 
               case 3:
-                res = _context3.sent;
-                sweetalert__WEBPACK_IMPORTED_MODULE_1___default()("Exito!", "El Usuario se ha editado!", "success");
-                _context3.next = 9;
+                _context.next = 7;
                 break;
 
-              case 7:
-                _context3.next = 9;
+              case 5:
+                _context.next = 7;
                 return axios.post('/usuarios', _this3.usuarios).then(function (res) {
                   _this3.cerrarModal();
 
@@ -2337,18 +2277,16 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   sweetalert__WEBPACK_IMPORTED_MODULE_1___default()("Exito!", "El Usuario se ha creado!", "success");
                 })["catch"](function (error) {
                   var array = Object.values(error.response.data.errors);
-                  array.forEach(function (element) {
-                    return sweetalert__WEBPACK_IMPORTED_MODULE_1___default()(String(element));
-                  });
+                  array.forEach(sweetalert__WEBPACK_IMPORTED_MODULE_1___default()(String(array)));
                   console.log(array);
                 });
 
-              case 9:
+              case 7:
               case "end":
-                return _context3.stop();
+                return _context.stop();
             }
           }
-        }, _callee3);
+        }, _callee);
       }))();
     },
     abrirModal: function abrirModal() {
@@ -55092,11 +55030,11 @@ var staticRenderFns = [
         _vm._v(" "),
         _c("th", [_vm._v("Nombre")]),
         _vm._v(" "),
-        _c("th", [_vm._v("Descripcion")]),
+        _c("th", [_vm._v("Descripción")]),
         _vm._v(" "),
         _c("th", [_vm._v("Ubicación")]),
         _vm._v(" "),
-        _c("th", [_vm._v("Acción")])
+        _c("th", { attrs: { width: "200px" } }, [_vm._v("Acción")])
       ])
     ])
   }
@@ -55463,7 +55401,11 @@ var render = function() {
                 _vm._v(" "),
                 _c("td", [_vm._v(_vm._s(users.email))]),
                 _vm._v(" "),
-                _c("td", [_vm._v(_vm._s(users.roles[0].name))]),
+                _c("td", [
+                  users.roles != ""
+                    ? _c("div", [_vm._v(_vm._s(users.roles[0].name))])
+                    : _c("div", [_vm._v("No asignado")])
+                ]),
                 _vm._v(" "),
                 _c("td", [
                   _c(

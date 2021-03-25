@@ -48,8 +48,6 @@
             <button  @click="guardar();" type="button" class="btn btn-success" data-dismiss="modal">
               Guardar
             </button>
-
-
           </div>
         </div>
       </div>
@@ -59,9 +57,9 @@
         <tr>
           <th>#</th>
           <th>Nombre</th>
-          <th>Descripcion</th>
+          <th>Descripción</th>
           <th>Ubicación</th>
-          <th>Acción</th>
+          <th width="200px">Acción</th>
         </tr>
       </thead>
       <tbody>
@@ -100,7 +98,6 @@ export default {
     };
   },
   methods: {
-
      tabla() {
         this.$nextTick(()=>{ $('#table').DataTable(
         {"language":{
@@ -109,28 +106,57 @@ export default {
         });
     },  
 
-    async listar() {
-      const res = await axios.get('/est-tabla');
+    listar() {
+      axios.get('/est-tabla').then(res=>{
       this.est = res.data;
+      $('#table').DataTable().destroy();
       this.tabla();
+       });
     },
 
-    async eliminar(id) {
-      const res = await axios.put('/establecimientos/' + id);
-      swal("Exito!", "El establecimiento se ha eliminado!", "success");
-      this.listar();
-    },
+      
 
-    async guardar() {
+    eliminar(id) {
+      swal({
+        title: 'Esta seguro?',
+        text: 'Este archivo sera eliminado definitavemente!',
+        icon: 'warning',
+        buttons: ["Cancelar", "Si!"],
+        }).then((willDelete)=> {
+        if (willDelete) {
+                 axios.delete('/establecimientos/'+id).then(res=>{
+                  this.listar() 
+                  swal("Exito!", "El establecimiento se ha eliminado!", "success");
+                 }).catch(function (error){
+                     var array = Object.values(error.response.data.errors)
+                     array.forEach(swal(String(array)))    
+                 });        
+        } 
+    });
+    },
+    
+
+    guardar() {
       if(this.modificar){
-        const res = await axios.put('/establecimientos/'+this.id, this.establecimiento);
-        swal("Exito!", "El establecimiento se ha editado!", "success");
+         axios.put('/establecimientos/'+this.id, this.establecimiento).then(res=>{ 
+                 this.cerrarModal();
+                 this.listar();
+                 swal("Exito!", "El establecimiento se ha editado!", "success");}).catch(function (error){
+                     var array = Object.values(error.response.data.errors+'<br>')
+                     array.forEach(swal(String(array)))
+                 });
+        
       }else{
-        const res = await axios.post('/establecimientos', this.establecimiento);
-        swal("Exito!", "El establecimiento se ha creado!", "success");
+         axios.post('/establecimientos', this.establecimiento).then(res=>{ 
+                 this.cerrarModal();
+                 this.listar();
+                 swal("Exito!", "El establecimiento se ha creado!", "success");}).catch(function (error){
+                     var array = Object.values(error.response.data.errors)
+                     array.forEach(swal(String(array)))
+                 });
+     
       }
-      this.cerrarModal();
-      this.listar();
+      
     },
 
       abrirModal(data={}){

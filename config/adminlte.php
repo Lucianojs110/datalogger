@@ -243,6 +243,7 @@ return [
             'url'  => 'establecimientos',
             'icon' => 'fas fa-industry',
             'can'  => 'administrador',
+            'can'  => 'usuario',
         ],
        
         [

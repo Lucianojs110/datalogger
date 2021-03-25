@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UserFormRequest extends FormRequest
+class UserEditFormRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -13,7 +13,7 @@ class UserFormRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return True;
     }
 
     /**
@@ -25,9 +25,9 @@ class UserFormRequest extends FormRequest
     {
         return [
             'name' => 'required|max:255',
-            'email' => 'required|email|max:255|unique:users',
+            'email' => 'required|email|max:255',
             'rol' => 'required',
-            'password' => 'required|min:6',
+            'password' => 'min:6',
             
         ];
     }
@@ -35,12 +35,8 @@ class UserFormRequest extends FormRequest
     {
         return [
             'name.required' => ' El campo nombre es requerido',
-            'email.required' => ' El campo email es requerido',
-            'email.unique' => ' El email ya ha sido usado',
             'rol.required' => ' Seleccione un rol',
-            'password.required' => ' El campo password es requerido',
             'password.min' => ' El password debe contener al menos 6 caracteres',    
         ];
     }
-
 }
